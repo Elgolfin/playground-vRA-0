@@ -1,8 +1,9 @@
-import chalk from 'chalk'
+import logger from './lib/logger'
 import identity from './lib/identity'
 import program from 'commander'
 import config from './lib/config'
 import https from 'https'
+import resources from './lib/resources'
 
 program
   .version('0.0.1')
@@ -29,9 +30,9 @@ if (!program.tenant) {
 }
 
 if (errors.length > 0) {
-  console.error(chalk.red.bold(`✖ ${errors.length + warnings.length} problems (${errors.length} errors, ${warnings.length} warnings)`))
+  logger.error(`✖ ${errors.length + warnings.length} problems (${errors.length} errors, ${warnings.length} warnings)`)
   errors.forEach(function (error, index) {
-    console.error(chalk.red.bold(`    ${index}. ${error}`))
+    logger.error(`    ${index}. ${error}`)
   })
   process.exit(1)
 }
@@ -49,9 +50,16 @@ config.agent = new https.Agent({
 
 identity.getToken((error, token) => {
   if (error) {
-    console.error(chalk.red.bold(error))
+    logger.error(chalk.red.bold(error))
     process.exit(1)
   }
-  console.log(chalk.blue.bold(token))
-  console.log(chalk.blue.bold(config.token.id))
+  logger.success(`Token successfully acquired (user: ${config.username})`)
+
+  resources.getActions('test-nico-rose', (error, resource) => {
+    if (error) {
+      logger.error(error)
+      process.exit(1)
+    }
+    logger.info(JSON.stringify(resource, null, 1))
+  })
 })
