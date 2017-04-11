@@ -4,6 +4,7 @@ import program from 'commander'
 import config from './lib/config'
 import https from 'https'
 import resources from './lib/resources'
+import chalk from 'chalk'
 
 program
   .version('0.0.1')
