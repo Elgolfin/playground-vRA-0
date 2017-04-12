@@ -6,6 +6,7 @@ import chalk from 'chalk'
 module.exports = {
   getAll: getAll,
   getByName: getByName,
+  getById: getById,
   getActions: getActions,
   showConfig: function () {
     console.log(chalk.blue(config.username))
@@ -55,6 +56,33 @@ function getByName (name, cb) {
     method: 'GET',
     agent: config.agent,
     url: `https://${config.hostname}/catalog-service/api/consumer/resources?limit=1000&$filter=(name eq '${name}')`,
+    headers: {
+      'cache-control': 'no-cache',
+      'content-type': 'application/json',
+      'authorization': `Bearer ${config.token.id}`
+    },
+    body: {},
+    json: true
+  }
+
+  request(options, function (error, response, body) {
+    if (error) {
+      return cb(error)
+    }
+
+    if (response.statusCode === 200) {
+      cb(null, body.content[0])
+    } else {
+      cb(JSON.stringify(body, null, 2))
+    }
+  })
+}
+
+function getById (id, cb) {
+  var options = {
+    method: 'GET',
+    agent: config.agent,
+    url: `https://${config.hostname}/catalog-service/api/consumer/resources?limit=1000&$filter=request/id eq '${id}'`,
     headers: {
       'cache-control': 'no-cache',
       'content-type': 'application/json',

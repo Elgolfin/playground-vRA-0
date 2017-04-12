@@ -3,7 +3,9 @@ import identity from './lib/identity'
 import program from 'commander'
 import config from './lib/config'
 import https from 'https'
+// eslint-disable-next-line
 import resources from './lib/resources'
+import requests from './lib/requests'
 import chalk from 'chalk'
 
 program
@@ -13,6 +15,8 @@ program
   .option('-h, --hostname <hostname>', 'The hostname of the vRealize REST API endpoint')
   .option('-p, --password <password>', 'The password')
   .option('-t, --tenant <tenant name>', 'The tenant name')
+  .option('-i, --request-id <request id>', 'The request ID')
+  .option('-r, --raw <true|false>', 'Get raw result or the slimmed one')
   .parse(process.argv)
 
 let errors = []
@@ -56,11 +60,27 @@ identity.getToken((error, token) => {
   }
   logger.success(`Token successfully acquired (user: ${config.username})`)
 
-  resources.getActions('test-nico-rose', (error, resource) => {
+  /* var deploymentOptions = {
+    blueprintName: 'Project Zone v5.1.0',
+    clientId: program.clientId,
+    projectId: program.projectId,
+    deploymentName: program.deploymentName
+  } */
+
+  var getOptions = {}
+  var action = requests.getAll
+  if (program.requestId) {
+    action = requests.get
+    getOptions.id = program.requestId
+    getOptions.raw = program.raw || false
+  }
+
+  action(getOptions, (error, response) => {
     if (error) {
-      logger.error(error)
+      logger.error(JSON.stringify(error, null, 2))
       process.exit(1)
     }
-    logger.info(JSON.stringify(resource, null, 1))
+    response.requestData = null
+    logger.info(JSON.stringify(response, null, 2))
   })
 })
