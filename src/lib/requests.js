@@ -94,9 +94,10 @@ function submit (deploymentOptions, cb) {
         return cb(error)
       }
 
-      templateData.data['hybris.Hostname.CID'] = deploymentOptions.clientId
+      templateData.data['hybris.Hostname.CID'] = deploymentOptions.clientId + Date.now()
       templateData.data['hybris.Hostname.PID'] = deploymentOptions.projectId
       templateData.data['_deploymentName'] = deploymentOptions.deploymentName
+      templateData.description = deploymentOptions.deploymentName
 
       sendRequest(urlRequest, templateData, function (error, response) {
         if (error) {
