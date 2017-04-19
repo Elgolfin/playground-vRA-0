@@ -83,6 +83,7 @@ function getByName (name, cb) {
 function submit (deploymentOptions, cb) {
   getByName(deploymentOptions.blueprintName, function (error, response) {
     if (error) {
+      console.error('getByName')
       return cb(error)
     }
 
@@ -91,16 +92,23 @@ function submit (deploymentOptions, cb) {
 
     getTemplate(urlTemplate, function (error, templateData) {
       if (error) {
+        console.error('getTemplate')
         return cb(error)
       }
 
+      var sshKey = 'youhou'
       templateData.data['hybris.Hostname.CID'] = deploymentOptions.clientId + Date.now()
       templateData.data['hybris.Hostname.PID'] = deploymentOptions.projectId
       templateData.data['_deploymentName'] = deploymentOptions.deploymentName
+      templateData.data.JUMPBOX.data['hybris.SSH.ssh_key'] = sshKey
+      templateData.data['hybris.SSH.ssh_key'] = sshKey
       templateData.description = deploymentOptions.deploymentName
+
+      console.error(JSON.stringify(templateData, null, 2))
 
       sendRequest(urlRequest, templateData, function (error, response) {
         if (error) {
+          console.error('sendRequest')
           return cb(error)
         }
         cb(null, response)
