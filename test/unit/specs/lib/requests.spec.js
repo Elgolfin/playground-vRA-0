@@ -37,13 +37,6 @@ describe('Requests', function () {
           {'hybris.Hostname.CID': 'te'}
         ]
       }
-      var testJson = {
-        data: {
-          'hybris.Hostname.CID': 'te'
-        }
-      }
-      testJson.data['hybris.Hostname.CID'] = 'ta yeule'
-      console.log('TEST:' + testJson.data['hybris.Hostname.CID'])
       expect(requests.getObjectFromKey(jsonSample, 'test')).to.deep.equal(null)
     })
   })

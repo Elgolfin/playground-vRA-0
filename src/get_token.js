@@ -5,6 +5,7 @@ import config from './lib/config'
 import https from 'https'
 // eslint-disable-next-line
 import resources from './lib/resources'
+// eslint-disable-next-line
 import requests from './lib/requests'
 import chalk from 'chalk'
 
