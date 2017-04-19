@@ -99,10 +99,11 @@ function submit (deploymentOptions, cb) {
       var sshKey = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC/ouV9PGZ1+SZJBLYxJtXDSxP4aaJCS/RSgm6jLBnD/llyDTLXQwk/7j7NfX2BTdTfwtEDDCHgKLokPreu0f2jgzL6LC3psJQaGXu3B0/u81oXthbVgN+EagOyP6u9HgiDJXFRmmDKCq0hADO98p5pUJlTa6z9GR2pYGaXGOHkXHV6M38vHSwJZ3i0EBcwPqfYK78MO/NAwoAzbiWhn8En24BiJe+gsvspl/2Cpi0uNENG5UkGOHS572pJ98ZiyxUCu4UmMP7CviDys2no7dVpgLyVsrT9Nq3+8FBarhAFFszKa0ucIALuGrLxREl81QxSv4Mjr+LMtcjE8JpmydQ/HtLDWkK1arFsyBNu2PcClYdwmHsabOdV0ssQCAeU74QHdA8Du3oakRHrnwinzVG9gmV5j1JicjUmqczVypXdC4oYlU+UiaIvs7W4mTfgpfzz08ahVDAQPDwWsDPQlg76P/nLapQqa+rydrGheGpporEIEZoPv9pxS4s4izVdZQvNafpCjl4/oXFNwgdgJGUoQq0Zu0F/pn8Mikil/0e4/6HF7O/og2/n0Rx1bX2IPMjx5Jh066yrLFO8Wiq0a8CUZjwHSQx6XjRQaPCdjPE3pol1xjPZffNutu8ZWH+wT88VMKiyufzkd/sdYWSzjKeM2PhANhkhZZWRpkr3g63whw=='
       templateData.data['hybris.Hostname.CID'] = deploymentOptions.clientId + Date.now()
       templateData.data['hybris.Hostname.PID'] = deploymentOptions.projectId
-      templateData.data['_deploymentName'] = deploymentOptions.deploymentName
+      var deploymentName = deploymentOptions.deploymentName + Date.now()
+      templateData.data['_deploymentName'] = deploymentName
       templateData.data.JUMPBOX.data['hybris.SSH.ssh_key'] = sshKey
       templateData.data['hybris.SSH.ssh_key'] = sshKey
-      templateData.description = deploymentOptions.deploymentName
+      templateData.description = deploymentName
 
       console.error(JSON.stringify(templateData, null, 2))
 
