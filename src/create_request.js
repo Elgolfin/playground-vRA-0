@@ -94,23 +94,6 @@ function execute (err, result) {
         process.exit(1)
       }
       logger.success('The Request has been sucessfully submitted. Id: ' + response.id)
-    // logger.info(JSON.stringify(response, null, 2))
-
-  // requests.getByName('Project Zone v5.1.0', (error, response) => {
-  //   if (error) {
-  //     logger.error(error)
-  //     process.exit(1)
-  //   }
-  //   logger.info(JSON.stringify(response, null, 2))
-
-  //   requests.submit('Project Zone v5.1.0', (error, response) => {
-  //     if (error) {
-  //       logger.error(error)
-  //       process.exit(1)
-  //     }
-  //     logger.info(JSON.stringify(response, null, 2))
-  //   })
-  // })
     })
   })
 }

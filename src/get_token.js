@@ -53,6 +53,8 @@ config.agent = new https.Agent({
   rejectUnauthorized: false
 })
 
+logger.info('VRA_TOKEN = ' + process.env.VRA_TOKEN)
+
 identity.getToken((error, token) => {
   if (error) {
     logger.error(chalk.red.bold(error))

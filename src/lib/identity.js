@@ -33,6 +33,7 @@ function getToken (cb) {
 
     if (response.statusCode === 200) {
       config.token = body
+      process.env.VRA_TOKEN = config.token
       cb(null, body.id)
     } else {
       cb(body.errors[0].systemMessage)

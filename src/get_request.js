@@ -53,19 +53,14 @@ config.agent = new https.Agent({
   rejectUnauthorized: false
 })
 
+logger.info('VRA_TOKEN = ' + process.env.VRA_TOKEN)
+
 identity.getToken((error, token) => {
   if (error) {
     logger.error(chalk.red.bold(error))
     process.exit(1)
   }
   logger.success(`Token successfully acquired (user: ${config.username})`)
-
-  /* var deploymentOptions = {
-    blueprintName: 'Project Zone v5.1.0',
-    clientId: program.clientId,
-    projectId: program.projectId,
-    deploymentName: program.deploymentName
-  } */
 
   var getOptions = {}
   var action = requests.getAll
