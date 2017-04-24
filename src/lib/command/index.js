@@ -5,6 +5,7 @@ import https from 'https'
 // eslint-disable-next-line
 import resources from '../resources'
 import prompt from 'prompt'
+import fs from 'fs'
 
 module.exports = {
   exec: exec
@@ -42,7 +43,18 @@ function exec (options, callback) {
 
     handleProgramArgs(options, program)
     setConfig(program, promptArg)
+
+    saveVMwareToken(config.token || 'test')
+
     callback()
+  })
+}
+
+function saveVMwareToken (data) {
+  fs.writeFile('/tmp/VMwareToken', data, function (err) {
+    if (err) {
+      throw err
+    }
   })
 }
 

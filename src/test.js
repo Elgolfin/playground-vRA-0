@@ -1,5 +1,8 @@
 import command from './lib/command'
 import logger from './lib/logger'
+import identity from './lib/identity'
+import chalk from 'chalk'
+import config from './lib/config'
 
 var options = [
   {
@@ -41,4 +44,16 @@ var options = [
 
 command.exec(options, function () {
   logger.info('TEST')
+  logger.success(`Hello ${config.username} the motherfucker`)
+
+  /*
+  identity.getToken((error, token) => {
+    if (error) {
+      logger.error(chalk.red.bold(error))
+      process.exit(1)
+    }
+    logger.success(`Token successfully acquired (user: ${config.username})`)
+    logger.success(`Token: ${token}`)
+  })
+  */
 })
