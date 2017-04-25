@@ -4,6 +4,10 @@ import identity from './lib/identity'
 import chalk from 'chalk'
 import config from './lib/config'
 
+identity.getToken = function (cb) {
+  cb(null, 'MOCK_TOKEN')
+}
+
 var options = [
   {
     flags: '-c, --client-id <client id>',
@@ -43,8 +47,16 @@ var options = [
 ]
 
 command.exec(options, function () {
-  logger.info('TEST')
   logger.success(`Hello ${config.username} the motherfucker`)
+
+  identity.getToken((error, token) => {
+    if (error) {
+      logger.error(chalk.red.bold(error))
+      process.exit(1)
+    }
+    logger.success(`Token successfully acquired (user: ${config.username})`)
+    logger.success(`Token: ${token}`)
+  })
 
   /*
   identity.getToken((error, token) => {

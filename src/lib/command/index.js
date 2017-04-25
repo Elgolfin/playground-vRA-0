@@ -6,10 +6,13 @@ import https from 'https'
 import resources from '../resources'
 import prompt from 'prompt'
 import fs from 'fs'
+import extfs from 'extfs'
 
 module.exports = {
   exec: exec
 }
+
+var VMwareTokenPath = 'VMwareToken'
 
 function exec (options, callback) {
   var schema = {
@@ -22,40 +25,61 @@ function exec (options, callback) {
   }
 
   prompt.start()
-  prompt.get(schema, function execute (err, promptArg) {
-    if (err) {
-      logger.error(err)
-      process.exit(1)
-    }
 
-    program
+  if (doesVMWareTokenExist()) {
+    // do not save, continue
+    populatePromptOptions(prompt, options, null, callback)
+  } else {
+    // save and continue
+    saveVMwareToken(config.token || 'test')
+
+    prompt.get(schema, function execute (err, promptArg) {
+      if (err) {
+        logger.error(err)
+        process.exit(1)
+      }
+
+      populatePromptOptions(prompt, options, promptArg, callback)
+    })
+  }
+}
+
+function populatePromptOptions (prompt, options, promptArg, callback) {
+  program
     .version('0.0.1')
     .usage('[options]')
     .option('-u, --username <username>', 'The username')
     .option('-h, --hostname <hostname>', 'The hostname of the vRealize REST API endpoint')
     .option('-t, --tenant <tenant name>', 'The tenant name')
 
-    options.forEach(function (option) {
-      program.option(`-${option.shortFlag}, --${option.longFlag} <${option.flagDisplayName}>`, option.description)
-    })
-
-    program.parse(process.argv)
-
-    handleProgramArgs(options, program)
-    setConfig(program, promptArg)
-
-    saveVMwareToken(config.token || 'test')
-
-    callback()
+  options.forEach(function (option) {
+    program.option(`-${option.shortFlag}, --${option.longFlag} <${option.flagDisplayName}>`, option.description)
   })
+
+  program.parse(process.argv)
+
+  handleProgramArgs(options, program)
+  setConfig(program, promptArg)
+
+  callback()
+}
+
+function doesVMWareTokenExist () {
+  if (!fs.existsSync(VMwareTokenPath)) {
+    return false
+  }
+
+  // check to see if file is empty
+  if (extfs.isEmptySync(VMwareTokenPath)) {
+    console.log('Token file is empty')
+    return false
+  }
+
+  return true
 }
 
 function saveVMwareToken (data) {
-  fs.writeFile('/tmp/VMwareToken', data, function (err) {
-    if (err) {
-      throw err
-    }
-  })
+  fs.writeFileSync(VMwareTokenPath, data)
 }
 
 function handleProgramArgs (options, prog) {
@@ -88,8 +112,10 @@ function handleProgramArgs (options, prog) {
 }
 
 function setConfig (program, promptArg) {
+  if (promptArg) {
+    config.password = promptArg.password
+  }
   config.username = program.username
-  config.password = promptArg.password
   config.hostname = program.hostname
   config.tenant = program.tenant
   config.agent = new https.Agent({

@@ -9,5 +9,6 @@
   "editor.renderWhitespace": "boundary",
   "workbench.sideBar.location": "right",
   "window.restoreFullscreen": true,
-  "window.showFullPath": true
+  "window.showFullPath": true,
+  "eslint.autoFixOnSave": true
 }
