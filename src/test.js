@@ -57,15 +57,4 @@ command.exec(options, function () {
     logger.success(`Token successfully acquired (user: ${config.username})`)
     logger.success(`Token: ${token}`)
   })
-
-  /*
-  identity.getToken((error, token) => {
-    if (error) {
-      logger.error(chalk.red.bold(error))
-      process.exit(1)
-    }
-    logger.success(`Token successfully acquired (user: ${config.username})`)
-    logger.success(`Token: ${token}`)
-  })
-  */
 })
