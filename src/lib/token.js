@@ -8,20 +8,26 @@ module.exports = {
 
 var VMwareTokenPath = 'VMwareToken'
 
-function doesVMWareTokenExist () {
-  if (!fs.existsSync(VMwareTokenPath)) {
-    return false
-  }
+function doesVMWareTokenExist (cb) {
+  fs.exists(VMwareTokenPath, function (exists) {
+    if (!exists) {
+      return cb(`The file at path ${VMwareTokenPath} does not exist`, false)
+    }
 
-  // check to see if file is empty
-  if (extfs.isEmptySync(VMwareTokenPath)) {
-    return false
-  }
-
-  return true
+    extfs.isEmpty(VMwareTokenPath, function (empty) {
+      if (empty) {
+        return cb(`The file at path ${VMwareTokenPath} is empty`, false)
+      }
+      cb(null, true)
+    })
+  })
 }
 
 /* istanbul ignore next */
 function saveVMwareToken (data) {
-  fs.writeFileSync(VMwareTokenPath, data)
+  fs.writeFile(VMwareTokenPath, data, function (err) {
+    if (err) {
+      throw err
+    }
+  })
 }

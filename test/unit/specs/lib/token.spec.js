@@ -14,9 +14,15 @@ describe('Token', function () {
   let doesVMWareTokenExistStub
     // eslint-disable-next-line
   let saveVMwareTokenStub
+      // eslint-disable-next-line
+  let fsExistsStub
+        // eslint-disable-next-line
+  let extfsIsEmptyStub
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create()
+    fsExistsStub = sandbox.stub(fs, 'exists')
+    extfsIsEmptyStub = sandbox.stub(extfs, 'isEmpty')
   })
 
   afterEach(() => {
@@ -24,38 +30,41 @@ describe('Token', function () {
   })
 
   describe('doesVMWareTokenExist method', function () {
-    it('should return false if the token file does not exist', function () {
-      var fsExistsStub = sandbox.stub(fs, 'existsSync')
-      fsExistsStub.returns(false)
+    it('should return false if the token file does not exist', function (done) {
+      fsExistsStub.yields(false)
+      extfsIsEmptyStub.yields(false)
 
-      var result = token.doesVMWareTokenExist()
-      expect(result).to.equal(false)
+      token.doesVMWareTokenExist(function (err, result) {
+        expect(err).to.be.a('string')
+        expect(result).to.equal(false)
+        done()
+      })
     })
   })
 
   describe('doesVMWareTokenExist method', function () {
-    it('should return false if the token file is empty', function () {
-      var fsExistsStub = sandbox.stub(fs, 'existsSync')
-      fsExistsStub.returns(true)
+    it('should return false if the token file is empty', function (done) {
+      fsExistsStub.yields(true)
+      extfsIsEmptyStub.yields(true)
 
-      var extfsStub = sandbox.stub(extfs, 'isEmptySync')
-      extfsStub.returns(true)
-
-      var result = token.doesVMWareTokenExist()
-      expect(result).to.equal(false)
+      token.doesVMWareTokenExist(function (err, result) {
+        expect(err).to.be.a('string')
+        expect(result).to.equal(false)
+        done()
+      })
     })
   })
 
   describe('doesVMWareTokenExist method', function () {
-    it('should return true if the token file is populated with a token', function () {
-      var fsExistsStub = sandbox.stub(fs, 'existsSync')
-      fsExistsStub.returns(true)
+    it('should return true if the token file is populated with a token', function (done) {
+      fsExistsStub.yields(true)
+      extfsIsEmptyStub.yields(false)
 
-      var extfsStub = sandbox.stub(extfs, 'isEmptySync')
-      extfsStub.returns(false)
-
-      var result = token.doesVMWareTokenExist()
-      expect(result).to.equal(true)
+      token.doesVMWareTokenExist(function (err, result) {
+        expect(err).to.equal(null)
+        expect(result).to.equal(true)
+        done()
+      })
     })
   })
 }
