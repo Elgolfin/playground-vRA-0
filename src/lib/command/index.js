@@ -4,15 +4,12 @@ import config from '../config'
 import https from 'https'
 // eslint-disable-next-line
 import resources from '../resources'
+import token from '../token'
 import prompt from 'prompt'
-import fs from 'fs'
-import extfs from 'extfs'
 
 module.exports = {
   exec: exec
 }
-
-var VMwareTokenPath = 'VMwareToken'
 
 function exec (options, callback) {
   var schema = {
@@ -26,14 +23,11 @@ function exec (options, callback) {
 
   prompt.start()
 
-  if (doesVMWareTokenExist()) {
+  if (token.doesVMWareTokenExist()) {
     // do not save, continue
     populatePromptOptions(prompt, options, null, callback)
   } else {
-    // save and continue
-    saveVMwareToken(config.token || 'test')
-
-    prompt.get(schema, function execute (err, promptArg) {
+    prompt.get(schema, function (err, promptArg) {
       if (err) {
         logger.error(err)
         process.exit(1)
@@ -62,24 +56,6 @@ function populatePromptOptions (prompt, options, promptArg, callback) {
   setConfig(program, promptArg)
 
   callback()
-}
-
-function doesVMWareTokenExist () {
-  if (!fs.existsSync(VMwareTokenPath)) {
-    return false
-  }
-
-  // check to see if file is empty
-  if (extfs.isEmptySync(VMwareTokenPath)) {
-    console.log('Token file is empty')
-    return false
-  }
-
-  return true
-}
-
-function saveVMwareToken (data) {
-  fs.writeFileSync(VMwareTokenPath, data)
 }
 
 function handleProgramArgs (options, prog) {
