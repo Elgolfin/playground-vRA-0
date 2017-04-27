@@ -23,19 +23,25 @@ function exec (options, callback) {
 
   prompt.start()
 
-  if (token.doesVMWareTokenExist()) {
-    // do not save, continue
-    populatePromptOptions(prompt, options, null, callback)
-  } else {
-    prompt.get(schema, function (err, promptArg) {
-      if (err) {
-        logger.error(err)
-        process.exit(1)
-      }
+  token.doesVMWareTokenExist(function (err, exists) {
+    if (err) {
+      console.log(err)
+    }
 
-      populatePromptOptions(prompt, options, promptArg, callback)
-    })
-  }
+    if (exists) {
+    // do not save, continue
+      populatePromptOptions(prompt, options, null, callback)
+    } else {
+      prompt.get(schema, function (err, promptArg) {
+        if (err) {
+          logger.error(err)
+          process.exit(1)
+        }
+
+        populatePromptOptions(prompt, options, promptArg, callback)
+      })
+    }
+  })
 }
 
 function populatePromptOptions (prompt, options, promptArg, callback) {

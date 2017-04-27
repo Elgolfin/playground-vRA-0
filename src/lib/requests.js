@@ -12,7 +12,9 @@ module.exports = {
   },
   getObjectFromKey: getObjectFromKey,
   get: get,
-  getAllCatalogItems: getAllCatalogItems
+  getAllCatalogItems: getAllCatalogItems,
+  getTemplate: getTemplate,
+  sendRequest: sendRequest
 }
 
 function getAllCatalogItems (cb) {
@@ -29,7 +31,7 @@ function getAllCatalogItems (cb) {
     json: true
   }
 
-  request(options, function (error, response, body) {
+  request.get(options, function (error, response, body) {
     if (error) {
       cb(error)
     }
@@ -67,7 +69,7 @@ function getByName (name, cb) {
     json: true
   }
 
-  request(options, function (error, response, body) {
+  request.get(options, function (error, response, body) {
     if (error) {
       return cb(error)
     }
@@ -81,7 +83,7 @@ function getByName (name, cb) {
 }
 
 function submit (deploymentOptions, cb) {
-  getByName(deploymentOptions.blueprintName, function (error, response) {
+  this.getByName(deploymentOptions.blueprintName, function (error, response) {
     if (error) {
       console.error('getByName')
       return cb(error)
@@ -90,7 +92,7 @@ function submit (deploymentOptions, cb) {
     var urlTemplate = response.links[0].href
     var urlRequest = response.links[1].href
 
-    getTemplate(urlTemplate, function (error, templateData) {
+    this.getTemplate(urlTemplate, function (error, templateData) {
       if (error) {
         console.error('getTemplate')
         return cb(error)
@@ -132,7 +134,7 @@ function getTemplate (url, cb) {
     json: true
   }
 
-  request(options, function (error, response, body) {
+  request.get(options, function (error, response, body) {
     if (error) {
       return cb(error)
     }
@@ -159,7 +161,7 @@ function sendRequest (url, data, cb) {
     json: true
   }
 
-  request(options, function (error, response, body) {
+  request.post(options, function (error, response, body) {
     if (error) {
       return cb(error)
     }
@@ -184,7 +186,7 @@ function get (params, cb) {
     json: true
   }
 
-  request(options, function (error, response, body) {
+  request.get(options, function (error, response, body) {
     if (error) {
       return cb(error)
     }
@@ -216,7 +218,7 @@ function getAll (obj, cb) {
     json: true
   }
 
-  request(options, function (error, response, body) {
+  request.get(options, function (error, response, body) {
     if (error) {
       return cb(error)
     }

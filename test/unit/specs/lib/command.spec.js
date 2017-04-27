@@ -43,11 +43,11 @@ describe('Command', function () {
   })
 
   describe('exec method', function () {
-    it('callback should properly execute when a token file exists and all parameters have been provided', function (done) {
+    it('callback should properly execute when a token file exists and all required parameters have been provided', function (done) {
       program.username = 'username'
       program.hostname = 'hostname'
       program.tenant = 'tenant'
-      tokenExistsStub.returns(true)
+      tokenExistsStub.yields(null, true)
 
       var callback = sinon.stub()
       command.exec([], callback)
@@ -58,11 +58,11 @@ describe('Command', function () {
   })
 
   describe('exec method', function () {
-    it('callback should properly execute when a password is entered at the prompt and all parameters have been provided', function (done) {
+    it('callback should properly execute when a password is entered at the prompt and all required parameters have been provided', function (done) {
       program.username = 'username'
       program.hostname = 'hostname'
       program.tenant = 'tenant'
-      tokenExistsStub.returns(false)
+      tokenExistsStub.yields(null, false)
 
       promptStubGet.callsArgWith(1, null, {password: 'pwd'})
 
@@ -74,11 +74,11 @@ describe('Command', function () {
   })
 
   describe('exec method', function () {
-    it('should prompt for missing tenant parameter when tenant parameter is missing', function (done) {
+    it('should prompt for missing tenant parameter when tenant parameter is missing and token file is exists', function (done) {
       program.username = 'username'
       program.hostname = 'hostname'
       program.tenant = ''
-      tokenExistsStub.returns(true)
+      tokenExistsStub.yields(null, true)
 
       command.exec([], function () {
         expect(programHelpStub.callCount).to.equal(1)
@@ -90,11 +90,11 @@ describe('Command', function () {
   })
 
   describe('exec method', function () {
-    it('should prompt for missing hostname parameter when hostname parameter is missing', function (done) {
+    it('should prompt for missing hostname parameter when hostname parameter is missing and token file exists', function (done) {
       program.username = 'username'
       program.hostname = ''
       program.tenant = 'tenant'
-      tokenExistsStub.returns(true)
+      tokenExistsStub.yields(null, true)
 
       command.exec([], function () {
         expect(programHelpStub.callCount).to.equal(1)
@@ -106,11 +106,11 @@ describe('Command', function () {
   })
 
   describe('exec method', function () {
-    it('should prompt for missing username parameter when username parameter is missing', function (done) {
+    it('should prompt for missing username parameter when username parameter is missing and token file exists', function (done) {
       program.username = ''
       program.hostname = 'hostname'
       program.tenant = 'tenant'
-      tokenExistsStub.returns(true)
+      tokenExistsStub.yields(null, true)
 
       command.exec([], function () {
         expect(programHelpStub.callCount).to.equal(1)
@@ -122,7 +122,7 @@ describe('Command', function () {
   })
 
   describe('exec method', function () {
-    it('should prompt for additional missing parameter when additional parameter is missing', function (done) {
+    it('should prompt for additional missing parameter when additional parameter is missing and token file exists', function (done) {
       var options = [
         {
           flags: '-c, --client-id <client id>',
@@ -138,7 +138,7 @@ describe('Command', function () {
       program.username = 'username'
       program.hostname = 'hostname'
       program.tenant = 'tenant'
-      tokenExistsStub.returns(false)
+      tokenExistsStub.yields(null, true)
 
       promptStubGet.callsArgWith(1, 'error', {password: ''})
 
@@ -152,11 +152,11 @@ describe('Command', function () {
   })
 
   describe('exec method', function () {
-    it('should exit when prompt receives an error from user password input', function (done) {
+    it('should exit when prompt receives an error from user password input and token file does not exist', function (done) {
       program.username = 'username'
       program.hostname = 'hostname'
       program.tenant = 'tenant'
-      tokenExistsStub.returns(false)
+      tokenExistsStub.yields(null, false)
 
       promptStubGet.callsArgWith(1, 'error', {password: ''})
 

@@ -5,7 +5,7 @@
   "author": "",
   "private": true,
   "scripts": {
-    "start": "npm run build && node dist/index.js",
+    "start": "npm run build && node dist/test.js",
     "test": "npm run lint && nyc --require babel-core/register mocha test/unit/specs --recursive && npm run report",
     "report": "nyc report --reporter=lcov",
     "testwatch": "nyc --require babel-core/register mocha test/unit/specs/ --recursive -w",
