@@ -133,9 +133,6 @@ describe('Requests', function () {
       requestGetStub.yields(null, response200, body)
       requests.getAllCatalogItems(function (err, response) {
         expect(err).to.be.null
-
-        // check that the items in the reponse match the # of items in the original
-        // body content
         expect(JSON.parse(response).length).to.equal(body.content.length)
         done()
       })

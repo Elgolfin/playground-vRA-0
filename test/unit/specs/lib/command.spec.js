@@ -169,6 +169,61 @@ describe('Command', function () {
   })
 
   describe('exec method', function () {
+    it('should not log error for optional parameter when required is false', function (done) {
+      var options = [
+        {
+          flags: '-c, --client-id <client id>',
+          shortFlag: 'c',
+          longFlag: 'client-id',
+          flagVariableName: 'clientId',
+          flagDisplayName: 'client id',
+          description: 'The client ID',
+          required: false
+        }
+      ]
+
+      program.username = 'username'
+      program.hostname = 'hostname'
+      program.tenant = 'tenant'
+      tokenExistsStub.yields(null, true)
+
+      promptStubGet.callsArgWith(1, 'error', {password: ''})
+
+      command.exec(options, function () {
+        expect(loggerErrorStub.called).to.equal(false)
+        done()
+      })
+    })
+  })
+
+  describe('exec method', function () {
+    it('should not log error for optional parameter when required is undefined', function (done) {
+      var options = [
+        {
+          flags: '-c, --client-id <client id>',
+          shortFlag: 'c',
+          longFlag: 'client-id',
+          flagVariableName: 'clientId',
+          flagDisplayName: 'client id',
+          description: 'The client ID'
+        }
+      ]
+
+      program.username = 'username'
+      program.hostname = 'hostname'
+      program.tenant = 'tenant'
+      tokenExistsStub.yields(null, true)
+
+      promptStubGet.callsArgWith(1, 'error', {password: ''})
+
+      command.exec(options, function () {
+        expect(loggerErrorStub.called).to.equal(false)
+        done()
+      })
+    })
+  })
+
+  describe('exec method', function () {
     it('should exit when prompt receives an error from user password input and token file does not exist', function (done) {
       program.username = 'username'
       program.hostname = 'hostname'

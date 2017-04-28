@@ -7,7 +7,6 @@ require('chai').should()
 var resources = require('../../../../src/lib/resources')
 
 var response200 = {statusCode: 200}
-// var response201 = {statusCode: 201}
 var response404 = {statusCode: 404}
 
 var resourceBody = {
@@ -30,12 +29,9 @@ describe('Resources', function () {
   let sandbox
   'use strict'
   let requestGetStub
-  'use strict'
-  // let consoleErrorStub
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create()
-    // consoleErrorStub = sandbox.stub(console, 'error')
     requestGetStub = sandbox.stub(request, 'get')
   })
 
