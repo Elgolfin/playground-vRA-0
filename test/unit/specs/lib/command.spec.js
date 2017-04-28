@@ -18,14 +18,16 @@ describe('Command', function () {
   let promptStubGet
   // eslint-disable-next-line
   let programParse
-    // eslint-disable-next-line
+  // eslint-disable-next-line
   let tokenExistsStub
-      // eslint-disable-next-line
+  // eslint-disable-next-line
   let programHelpStub
-        // eslint-disable-next-line
+  // eslint-disable-next-line
   let loggerErrorStub
-          // eslint-disable-next-line
+  // eslint-disable-next-line
   let processExitStub
+  // eslint-disable-next-line
+  let consoleErrorStub
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create()
@@ -36,10 +38,25 @@ describe('Command', function () {
     programHelpStub = sandbox.stub(program, 'help')
     loggerErrorStub = sandbox.stub(logger, 'error')
     processExitStub = sandbox.stub(process, 'exit')
+    consoleErrorStub = sandbox.stub(console, 'error')
   })
 
   afterEach(() => {
     sandbox.restore()
+  })
+
+  describe('exec method', function () {
+    it('should log error when error occurs checking if a VMware token exists', function (done) {
+      program.username = 'username'
+      program.hostname = 'hostname'
+      program.tenant = 'tenant'
+      tokenExistsStub.yields('error', true)
+
+      command.exec([], function () {
+        expect(consoleErrorStub.callCount).to.equal(1)
+        done()
+      })
+    })
   })
 
   describe('exec method', function () {

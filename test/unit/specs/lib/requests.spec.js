@@ -11,6 +11,30 @@ var response200 = {statusCode: 200}
 var response201 = {statusCode: 201}
 var response404 = {statusCode: 404}
 
+var deploymentOptions = {
+  clientId: 1,
+  projectId: 2,
+  deploymentName: 3
+}
+
+var templateData = {
+  description: 'description',
+  data:
+  {
+    'hybris.Hostname.CID': 1,
+    'hybris.Hostname.PID': 2,
+    '_deploymentName': 3,
+    'hybris.SSH.ssh_key': 4,
+    JUMPBOX:
+    {
+      data:
+      {
+        'hybris.SSH.ssh_key': 5
+      }
+    }
+  }
+}
+
 var body = {
   id: 1,
   requestCompletion: true,
@@ -34,9 +58,12 @@ describe('Requests', function () {
   let requestGetStub
   'use strict'
   let requestPostStub
+  'use strict'
+  let consoleErrorStub
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create()
+    consoleErrorStub = sandbox.stub(console, 'error')
     requestGetStub = sandbox.stub(request, 'get')
     requestPostStub = sandbox.stub(request, 'post')
   })
@@ -80,8 +107,8 @@ describe('Requests', function () {
   })
 
   describe('getAllCatalogItems method', function () {
-    it('should return response body as error when status code is not 200', function (done) {
-      requestGetStub.yields(null, response404, 'error')
+    it('callback should return an error when getRequest fails', function (done) {
+      requestGetStub.yields('error', null, null)
       requests.getAllCatalogItems(function (err, response) {
         expect(err).to.be.a('string')
         expect(response).to.be.undefined
@@ -91,7 +118,18 @@ describe('Requests', function () {
   })
 
   describe('getAllCatalogItems method', function () {
-    it('should return body item list when status code is 200', function (done) {
+    it('callback should return response body as error when getRequest returns a non-successful status code', function (done) {
+      requestGetStub.yields(null, response404, body)
+      requests.getAllCatalogItems(function (err, response) {
+        expect(err).to.be.a('string')
+        expect(response).to.be.undefined
+        done()
+      })
+    })
+  })
+
+  describe('getAllCatalogItems method', function () {
+    it('callback should return body item list when getRequest returns a 200 status code', function (done) {
       requestGetStub.yields(null, response200, body)
       requests.getAllCatalogItems(function (err, response) {
         expect(err).to.be.null
@@ -105,7 +143,7 @@ describe('Requests', function () {
   })
 
   describe('getByName method', function () {
-    it('should return error when get request fails', function (done) {
+    it('callback should return an error when getRequest fails', function (done) {
       requestGetStub.yields('error', null, null)
       requests.getByName([], function (err, response) {
         expect(err).to.be.a('string')
@@ -116,7 +154,7 @@ describe('Requests', function () {
   })
 
   describe('getByName method', function () {
-    it('should return response body as error when status code is not 200', function (done) {
+    it('callback should return response body as error when getRequest status code is not 200', function (done) {
       requestGetStub.yields(null, response404, 'error')
       requests.getByName('name', function (err, response) {
         expect(err).to.be.a('string')
@@ -127,7 +165,7 @@ describe('Requests', function () {
   })
 
   describe('getByName method', function () {
-    it('should return body content when status code is 200', function (done) {
+    it('should return body content when getRequest status code is 200', function (done) {
       requestGetStub.yields(null, response200, body)
       requests.getByName('name', function (err, response) {
         expect(err).to.be.null
@@ -138,7 +176,7 @@ describe('Requests', function () {
   })
 
   describe('get method', function () {
-    it('should return error when get request fails', function (done) {
+    it('callback should return an error when getRequest fails', function (done) {
       requestGetStub.yields('error', null, null)
       requests.get([], function (err, response) {
         expect(err).to.be.a('string')
@@ -149,7 +187,7 @@ describe('Requests', function () {
   })
 
   describe('get method', function () {
-    it('should return response body as error when status code is not 200', function (done) {
+    it('callback should return response body as error when getRequest status code is not 200', function (done) {
       requestGetStub.yields(null, response404, 'error')
       requests.get('name', function (err, response) {
         expect(err).to.be.a('string')
@@ -160,7 +198,7 @@ describe('Requests', function () {
   })
 
   describe('get method', function () {
-    it('should return body content with only id and request completion when status code is 200 and raw parameter is false', function (done) {
+    it('callback should return body content with only id and request completion when getRequest status code is 200 and raw parameter is false', function (done) {
       var params = {id: 1, raw: false}
 
       requestGetStub.yields(null, response200, body)
@@ -175,7 +213,7 @@ describe('Requests', function () {
   })
 
   describe('get method', function () {
-    it('should return body when status code is 200 and raw parameter is true', function (done) {
+    it('callback should return body when getRequest status code is 200 and raw parameter is true', function (done) {
       var params = {id: 1, raw: true}
 
       requestGetStub.yields(null, response200, body)
@@ -188,7 +226,7 @@ describe('Requests', function () {
   })
 
   describe('getAll method', function () {
-    it('should return response body as error when status code is not 200', function (done) {
+    it('should return response body as error when getRequest status code is not 200', function (done) {
       requestGetStub.yields(null, response404, 'error')
       requests.getAll('name', function (err, response) {
         expect(err).to.be.a('string')
@@ -199,7 +237,7 @@ describe('Requests', function () {
   })
 
   describe('getAll method', function () {
-    it('should return error when get request fails', function (done) {
+    it('callback should return an error when getRequest fails', function (done) {
       requestGetStub.yields('error', null, null)
       requests.getAll([], function (err, response) {
         expect(err).to.be.a('string')
@@ -210,7 +248,7 @@ describe('Requests', function () {
   })
 
   describe('getAll method', function () {
-    it('should return body when status code is 200', function (done) {
+    it('callback should return body when getRequest status code is 200', function (done) {
       requestGetStub.yields(null, response200, body)
       requests.getAll([], function (err, response) {
         expect(err).to.be.null
@@ -221,7 +259,7 @@ describe('Requests', function () {
   })
 
   describe('sendRequest method', function () {
-    it('should return error when get request fails', function (done) {
+    it('should return error when getRequest fails', function (done) {
       requestPostStub.yields('error', null, null)
       requests.sendRequest([], [], function (err, response) {
         expect(err).to.be.a('string')
@@ -232,7 +270,7 @@ describe('Requests', function () {
   })
 
   describe('sendRequest method', function () {
-    it('should return response body as error when status code is not 200', function (done) {
+    it('callback should return response body as error when getRequest status code is not 200', function (done) {
       requestPostStub.yields(null, response404, 'error')
       requests.sendRequest([], [], function (err, response) {
         expect(err).to.be.a('string')
@@ -243,7 +281,7 @@ describe('Requests', function () {
   })
 
   describe('sendRequest method', function () {
-    it('should return body when status code is 201', function (done) {
+    it('should return body when getRequest status code is 201', function (done) {
       requestPostStub.yields(null, response201, body)
       requests.sendRequest([], [], function (err, response) {
         expect(err).to.be.null
@@ -254,7 +292,7 @@ describe('Requests', function () {
   })
 
   describe('getTemplate method', function () {
-    it('should return error when get request fails', function (done) {
+    it('callback should return an error when getRequest fails', function (done) {
       requestGetStub.yields('error', null, null)
       requests.getTemplate([], function (err, response) {
         expect(err).to.be.a('string')
@@ -265,7 +303,7 @@ describe('Requests', function () {
   })
 
   describe('getTemplate method', function () {
-    it('should return response body as error when status code is not 200', function (done) {
+    it('callback should return response body as error when status code is not 200', function (done) {
       requestGetStub.yields(null, response404, 'error')
       requests.getTemplate('name', function (err, response) {
         expect(err).to.be.a('string')
@@ -276,7 +314,7 @@ describe('Requests', function () {
   })
 
   describe('getTemplate method', function () {
-    it('should return body when status code is 200 and raw parameter is true', function (done) {
+    it('callback should return body when getRequest status code is 200', function (done) {
       requestGetStub.yields(null, response200, body)
       requests.getTemplate([], function (err, response) {
         expect(err).to.be.null
@@ -287,12 +325,9 @@ describe('Requests', function () {
   })
 
   describe('submit method', function () {
-    it('should return error when blueprint name cannot be found', function (done) {
-       // var getByNameStub = sandbox.stub(requests, 'getByName').callsFake(function () //{ console.log('fake') })
-      // requests.getByName()
+    it('callback should return an error when blueprint name cannot be found', function (done) {
       var getByNameStub = sandbox.stub(requests, 'getByName')
       getByNameStub.yields('error', body)
-      requestGetStub.yields(null, response200, body)
 
       requests.submit([], function (err, response) {
         expect(err).to.be.a('string')
@@ -302,14 +337,11 @@ describe('Requests', function () {
   })
 
   describe('submit method', function () {
-    it('should return error when blueprint name cannot be found', function (done) {
-       // var getByNameStub = sandbox.stub(requests, 'getByName').callsFake(function () //{ console.log('fake') })
-      // requests.getByName()
+    it('callback should return an error when the template cannot tbe found', function (done) {
       var getByNameStub = sandbox.stub(requests, 'getByName')
       var getTemplateStub = sandbox.stub(requests, 'getTemplate')
-      getByNameStub.yields(null, body)
+      getByNameStub.yields(null, body.content[0])
       getTemplateStub.yields('error', body)
-      requestGetStub.yields(null, response200, body)
 
       requests.submit([], function (err, response) {
         expect(err).to.be.a('string')
@@ -318,18 +350,39 @@ describe('Requests', function () {
     })
   })
 
-  // describe('submit method', function () {
-  //   it('should return error when unable to get template', function (done) {
-  //     var getByNameStub = sandbox.stub(requests, 'getByName')
-  //     var getTemplateStub = sandbox.stub(requests, 'getTemplate')
+  describe('submit method', function () {
+    it('callback should return an error when sendRequest fails with valid blueprint name and template', function (done) {
+      var getByNameStub = sandbox.stub(requests, 'getByName')
+      var getTemplateStub = sandbox.stub(requests, 'getTemplate')
+      var sendRequestStub = sandbox.stub(requests, 'sendRequest')
 
-  //     getByNameStub.yields(null, body.content[0])
-  //     getTemplateStub.yields('error', null)
+      getByNameStub.yields(null, body.content[0])
+      getTemplateStub.yields(null, templateData)
+      sendRequestStub.yields('error', null)
 
-  //     requests.submit([], function (err, response) {
-  //       expect(err).to.be.a('string')
-  //       done()
-  //     })
-  //   })
-  // })
+      requests.submit(deploymentOptions, function (err, response) {
+        expect(err).to.be.a('string')
+        expect(consoleErrorStub.callCount).to.equal(1)
+        done()
+      })
+    })
+  })
+
+  describe('submit method', function () {
+    it('callback should properly execute with a valid blueprint name and template', function (done) {
+      var getByNameStub = sandbox.stub(requests, 'getByName')
+      var getTemplateStub = sandbox.stub(requests, 'getTemplate')
+      var sendRequestStub = sandbox.stub(requests, 'sendRequest')
+
+      getByNameStub.yields(null, body.content[0])
+      getTemplateStub.yields(null, templateData)
+      sendRequestStub.yields(null, 'response')
+
+      requests.submit(deploymentOptions, function (err, response) {
+        expect(err).to.be.null
+        expect(response).to.be.a('string')
+        done()
+      })
+    })
+  })
 })

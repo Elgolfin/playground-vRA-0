@@ -3,6 +3,7 @@ import config from './config'
 import chalk from 'chalk'
 import _ from 'lodash'
 
+  /* istanbul ignore next */
 module.exports = {
   getAll: getAll,
   getByName: getByName,
@@ -83,7 +84,7 @@ function getByName (name, cb) {
 }
 
 function submit (deploymentOptions, cb) {
-  this.getByName(deploymentOptions.blueprintName, function (error, response) {
+  module.exports.getByName(deploymentOptions.blueprintName, function (error, response) {
     if (error) {
       console.error('getByName')
       return cb(error)
@@ -92,7 +93,7 @@ function submit (deploymentOptions, cb) {
     var urlTemplate = response.links[0].href
     var urlRequest = response.links[1].href
 
-    this.getTemplate(urlTemplate, function (error, templateData) {
+    module.exports.getTemplate(urlTemplate, function (error, templateData) {
       if (error) {
         console.error('getTemplate')
         return cb(error)
@@ -107,9 +108,7 @@ function submit (deploymentOptions, cb) {
       templateData.data['hybris.SSH.ssh_key'] = sshKey
       templateData.description = deploymentName
 
-      console.error(JSON.stringify(templateData, null, 2))
-
-      sendRequest(urlRequest, templateData, function (error, response) {
+      module.exports.sendRequest(urlRequest, templateData, function (error, response) {
         if (error) {
           console.error('sendRequest')
           return cb(error)

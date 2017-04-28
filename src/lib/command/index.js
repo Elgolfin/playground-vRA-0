@@ -25,7 +25,7 @@ function exec (options, callback) {
 
   token.doesVMWareTokenExist(function (err, exists) {
     if (err) {
-      console.log(err)
+      console.error(err)
     }
 
     if (exists) {
