@@ -40,9 +40,7 @@ describe('Token', function () {
         done()
       })
     })
-  })
 
-  describe('doesVMWareTokenExist method', function () {
     it('should return false if the token file is empty', function (done) {
       fsExistsStub.yields(true)
       extfsIsEmptyStub.yields(true)
@@ -53,9 +51,7 @@ describe('Token', function () {
         done()
       })
     })
-  })
 
-  describe('doesVMWareTokenExist method', function () {
     it('should return true if the token file is populated with a token', function (done) {
       fsExistsStub.yields(true)
       extfsIsEmptyStub.yields(false)

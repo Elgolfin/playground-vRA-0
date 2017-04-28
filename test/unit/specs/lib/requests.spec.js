@@ -72,17 +72,6 @@ describe('Requests', function () {
     sandbox.restore()
   })
 
-  describe('getAllCatalogItems method', function () {
-    it('should return error when get request fails', function (done) {
-      requestGetStub.yields('error', null, null)
-      requests.getAllCatalogItems(function (err, response) {
-        expect(err).to.be.a('string')
-        expect(response).to.be.undefined
-        done()
-      })
-    })
-  })
-
   describe('getObjectFromKey method', function () {
     it('should return the object when the key is present in the entries Array', function () {
       var jsonSample = {
@@ -107,6 +96,15 @@ describe('Requests', function () {
   })
 
   describe('getAllCatalogItems method', function () {
+    it('should return error when get request fails', function (done) {
+      requestGetStub.yields('error', null, null)
+      requests.getAllCatalogItems(function (err, response) {
+        expect(err).to.be.a('string')
+        expect(response).to.be.undefined
+        done()
+      })
+    })
+
     it('callback should return an error when getRequest fails', function (done) {
       requestGetStub.yields('error', null, null)
       requests.getAllCatalogItems(function (err, response) {
@@ -115,9 +113,7 @@ describe('Requests', function () {
         done()
       })
     })
-  })
 
-  describe('getAllCatalogItems method', function () {
     it('callback should return response body as error when getRequest returns a non-successful status code', function (done) {
       requestGetStub.yields(null, response404, body)
       requests.getAllCatalogItems(function (err, response) {
@@ -126,9 +122,7 @@ describe('Requests', function () {
         done()
       })
     })
-  })
 
-  describe('getAllCatalogItems method', function () {
     it('callback should return body item list when getRequest returns a 200 status code', function (done) {
       requestGetStub.yields(null, response200, body)
       requests.getAllCatalogItems(function (err, response) {
@@ -148,9 +142,7 @@ describe('Requests', function () {
         done()
       })
     })
-  })
 
-  describe('getByName method', function () {
     it('callback should return response body as error when getRequest status code is not 200', function (done) {
       requestGetStub.yields(null, response404, 'error')
       requests.getByName('name', function (err, response) {
@@ -159,9 +151,7 @@ describe('Requests', function () {
         done()
       })
     })
-  })
 
-  describe('getByName method', function () {
     it('should return body content when getRequest status code is 200', function (done) {
       requestGetStub.yields(null, response200, body)
       requests.getByName('name', function (err, response) {
@@ -192,9 +182,7 @@ describe('Requests', function () {
         done()
       })
     })
-  })
 
-  describe('get method', function () {
     it('callback should return body content with only id and request completion when getRequest status code is 200 and raw parameter is false', function (done) {
       var params = {id: 1, raw: false}
 
@@ -207,9 +195,7 @@ describe('Requests', function () {
         done()
       })
     })
-  })
 
-  describe('get method', function () {
     it('callback should return body when getRequest status code is 200 and raw parameter is true', function (done) {
       var params = {id: 1, raw: true}
 
@@ -231,9 +217,7 @@ describe('Requests', function () {
         done()
       })
     })
-  })
 
-  describe('getAll method', function () {
     it('callback should return an error when getRequest fails', function (done) {
       requestGetStub.yields('error', null, null)
       requests.getAll([], function (err, response) {
@@ -242,9 +226,7 @@ describe('Requests', function () {
         done()
       })
     })
-  })
 
-  describe('getAll method', function () {
     it('callback should return body when getRequest status code is 200', function (done) {
       requestGetStub.yields(null, response200, body)
       requests.getAll([], function (err, response) {
@@ -264,9 +246,7 @@ describe('Requests', function () {
         done()
       })
     })
-  })
 
-  describe('sendRequest method', function () {
     it('callback should return response body as error when getRequest status code is not 200', function (done) {
       requestPostStub.yields(null, response404, 'error')
       requests.sendRequest([], [], function (err, response) {
@@ -275,9 +255,7 @@ describe('Requests', function () {
         done()
       })
     })
-  })
 
-  describe('sendRequest method', function () {
     it('should return body when getRequest status code is 201', function (done) {
       requestPostStub.yields(null, response201, body)
       requests.sendRequest([], [], function (err, response) {
@@ -297,9 +275,7 @@ describe('Requests', function () {
         done()
       })
     })
-  })
 
-  describe('getTemplate method', function () {
     it('callback should return response body as error when status code is not 200', function (done) {
       requestGetStub.yields(null, response404, 'error')
       requests.getTemplate('name', function (err, response) {
@@ -308,9 +284,7 @@ describe('Requests', function () {
         done()
       })
     })
-  })
 
-  describe('getTemplate method', function () {
     it('callback should return body when getRequest status code is 200', function (done) {
       requestGetStub.yields(null, response200, body)
       requests.getTemplate([], function (err, response) {
@@ -331,9 +305,7 @@ describe('Requests', function () {
         done()
       })
     })
-  })
 
-  describe('submit method', function () {
     it('callback should return an error when the template cannot tbe found', function (done) {
       var getByNameStub = sandbox.stub(requests, 'getByName')
       var getTemplateStub = sandbox.stub(requests, 'getTemplate')
@@ -345,9 +317,7 @@ describe('Requests', function () {
         done()
       })
     })
-  })
 
-  describe('submit method', function () {
     it('callback should return an error when sendRequest fails with valid blueprint name and template', function (done) {
       var getByNameStub = sandbox.stub(requests, 'getByName')
       var getTemplateStub = sandbox.stub(requests, 'getTemplate')
@@ -363,9 +333,7 @@ describe('Requests', function () {
         done()
       })
     })
-  })
 
-  describe('submit method', function () {
     it('callback should properly execute with a valid blueprint name and template', function (done) {
       var getByNameStub = sandbox.stub(requests, 'getByName')
       var getTemplateStub = sandbox.stub(requests, 'getTemplate')

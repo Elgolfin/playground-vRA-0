@@ -48,9 +48,7 @@ describe('Resources', function () {
         done()
       })
     })
-  })
 
-  describe('getAll method', function () {
     it('callback should return error with contents of body when getRequest returns non-successful status code', function (done) {
       requestGetStub.yields(null, response404, resourceBody)
 
@@ -61,9 +59,7 @@ describe('Resources', function () {
         done()
       })
     })
-  })
 
-  describe('getAll method', function () {
     it('callback should return contents of body when getRequest returns 200 status code', function (done) {
       requestGetStub.yields(null, response200, resourceBody)
 
@@ -85,9 +81,7 @@ describe('Resources', function () {
         done()
       })
     })
-  })
 
-  describe('getByName method', function () {
     it('callback should return error with contents of body when getRequest returns non-successful status code', function (done) {
       requestGetStub.yields(null, response404, resourceBody)
 
@@ -98,9 +92,7 @@ describe('Resources', function () {
         done()
       })
     })
-  })
 
-  describe('getByName method', function () {
     it('callback should return contents of body when getRequest returns 200 status code', function (done) {
       requestGetStub.yields(null, response200, resourceBody)
 
@@ -122,9 +114,7 @@ describe('Resources', function () {
         done()
       })
     })
-  })
 
-  describe('getById method', function () {
     it('callback should return error with contents of body when getRequest returns non-successful status code', function (done) {
       requestGetStub.yields(null, response404, resourceBody)
 
@@ -135,9 +125,7 @@ describe('Resources', function () {
         done()
       })
     })
-  })
 
-  describe('getById method', function () {
     it('callback should return contents of body when getRequest returns 200 status code', function (done) {
       requestGetStub.yields(null, response200, resourceBody)
 
@@ -160,9 +148,7 @@ describe('Resources', function () {
         done()
       })
     })
-  })
 
-  describe('getActions method', function () {
     it('callback should return error when getRequest fails', function (done) {
       var getByNameStub = sandbox.stub(resources, 'getByName')
       getByNameStub.yields(null, [])
@@ -173,9 +159,7 @@ describe('Resources', function () {
         done()
       })
     })
-  })
 
-  describe('getActions method', function () {
     it('callback should return error with contents of body when getRequest returns non-successful status code', function (done) {
       var getByNameStub = sandbox.stub(resources, 'getByName')
       getByNameStub.yields(null, [])
@@ -188,9 +172,7 @@ describe('Resources', function () {
         done()
       })
     })
-  })
 
-  describe('getActions method', function () {
     it('callback should return contents of body when getRequest returns 200 status code', function (done) {
       var getByNameStub = sandbox.stub(resources, 'getByName')
       getByNameStub.yields(null, [])

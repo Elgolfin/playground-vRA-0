@@ -57,9 +57,6 @@ describe('Command', function () {
         done()
       })
     })
-  })
-
-  describe('exec method', function () {
     it('callback should properly execute when a token file exists and all required parameters have been provided', function (done) {
       program.username = 'username'
       program.hostname = 'hostname'
@@ -72,9 +69,6 @@ describe('Command', function () {
       expect(callback.called).to.equal(true)
       done()
     })
-  })
-
-  describe('exec method', function () {
     it('callback should properly execute when a password is entered at the prompt and all required parameters have been provided', function (done) {
       program.username = 'username'
       program.hostname = 'hostname'
@@ -88,9 +82,6 @@ describe('Command', function () {
         done()
       })
     })
-  })
-
-  describe('exec method', function () {
     it('should prompt for missing tenant parameter when tenant parameter is missing and token file is exists', function (done) {
       program.username = 'username'
       program.hostname = 'hostname'
@@ -104,9 +95,6 @@ describe('Command', function () {
         done()
       })
     })
-  })
-
-  describe('exec method', function () {
     it('should prompt for missing hostname parameter when hostname parameter is missing and token file exists', function (done) {
       program.username = 'username'
       program.hostname = ''
@@ -120,9 +108,6 @@ describe('Command', function () {
         done()
       })
     })
-  })
-
-  describe('exec method', function () {
     it('should prompt for missing username parameter when username parameter is missing and token file exists', function (done) {
       program.username = ''
       program.hostname = 'hostname'
@@ -136,9 +121,6 @@ describe('Command', function () {
         done()
       })
     })
-  })
-
-  describe('exec method', function () {
     it('should prompt for additional missing parameter when additional parameter is missing and token file exists', function (done) {
       var options = [
         {
@@ -166,9 +148,6 @@ describe('Command', function () {
         done()
       })
     })
-  })
-
-  describe('exec method', function () {
     it('should not log error for optional parameter when required is false', function (done) {
       var options = [
         {
@@ -194,9 +173,6 @@ describe('Command', function () {
         done()
       })
     })
-  })
-
-  describe('exec method', function () {
     it('should not log error for optional parameter when required is undefined', function (done) {
       var options = [
         {
@@ -221,9 +197,6 @@ describe('Command', function () {
         done()
       })
     })
-  })
-
-  describe('exec method', function () {
     it('should exit when prompt receives an error from user password input and token file does not exist', function (done) {
       program.username = 'username'
       program.hostname = 'hostname'
