@@ -3,6 +3,7 @@ import config from './config'
 import chalk from 'chalk'
 // import _ from 'lodash'
 
+/* istanbul ignore next */
 module.exports = {
   getAll: getAll,
   getByName: getByName,
@@ -27,7 +28,7 @@ function getAll (cb) {
     json: true
   }
 
-  request(options, function (error, response, body) {
+  request.get(options, function (error, response, body) {
     if (error) {
       return cb(error)
     }
@@ -65,7 +66,7 @@ function getByName (name, cb) {
     json: true
   }
 
-  request(options, function (error, response, body) {
+  request.get(options, function (error, response, body) {
     if (error) {
       return cb(error)
     }
@@ -92,7 +93,7 @@ function getById (id, cb) {
     json: true
   }
 
-  request(options, function (error, response, body) {
+  request.get(options, function (error, response, body) {
     if (error) {
       return cb(error)
     }
@@ -106,7 +107,7 @@ function getById (id, cb) {
 }
 
 function getActions (resourceName, cb) {
-  getByName(resourceName, (error, resource) => {
+  module.exports.getByName(resourceName, (error, resource) => {
     if (error) {
       return cb(error, null)
     }
@@ -123,7 +124,7 @@ function getActions (resourceName, cb) {
       json: true
     }
 
-    request(options, function (error, response, body) {
+    request.get(options, function (error, response, body) {
       if (error) {
         return cb(error)
       }
