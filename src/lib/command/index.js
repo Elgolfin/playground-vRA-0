@@ -78,9 +78,11 @@ function handleProgramArgs (options, prog) {
   }
 
   options.forEach(function (option) {
-    if (typeof option.required !== 'undefined' && option.required && !prog[option.flagVariableName]) {
-      errors.push(`You must provide a ${option.flagDisplayName}`)
-    }
+    validateProgramOptions(option, prog, function (err, result) {
+      if (err) {
+        errors.push(err)
+      }
+    })
   })
 
   if (errors.length > 0) {
@@ -91,6 +93,13 @@ function handleProgramArgs (options, prog) {
     program.help()
     process.exit(1)
   }
+}
+
+function validateProgramOptions (option, prog, callback) {
+  if (typeof option.required !== 'undefined' && option.required && !prog[option.flagVariableName]) {
+    callback(`You must provide a ${option.flagDisplayName}`, false)
+  }
+  callback(null, true)
 }
 
 function setConfig (program, promptArg) {
