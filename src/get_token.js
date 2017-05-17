@@ -8,6 +8,7 @@ import resources from './lib/resources'
 // eslint-disable-next-line
 import requests from './lib/requests'
 import chalk from 'chalk'
+import token from './lib/token'
 
 program
   .version('0.0.1')
@@ -55,11 +56,20 @@ config.agent = new https.Agent({
 
 logger.info('VRA_TOKEN = ' + process.env.VRA_TOKEN)
 
-identity.getToken((error, token) => {
+identity.getToken((error, authToken) => {
   if (error) {
     logger.error(chalk.red.bold(error))
     process.exit(1)
   }
-  logger.success(`Token successfully acquired (user: ${config.username})`)
-  logger.success(`Token: ${token}`)
+  logger.success(`Token successfully acquired for ${config.username} with value:${authToken} `)
+
+  token.doesVMWareTokenExist(function (err, exists) {
+    if (err) {
+      logger.error(chalk.red.bold(err))
+      process.exit(1)
+    }
+    if (!exists) {
+      token.saveVMwareToken(authToken)
+    }
+  })
 })
