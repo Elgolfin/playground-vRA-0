@@ -1,12 +1,13 @@
 import command from './lib/command'
 import logger from './lib/logger'
-import identity from './lib/identity'
+// import identity from './lib/identity'
 import chalk from 'chalk'
 import config from './lib/config'
+import actions from './lib/actions'
 
-identity.getToken = function (cb) {
-  cb(null, 'MOCK_TOKEN')
-}
+// identity.getToken = function (cb) {
+//   cb(null, 'MOCK_TOKEN')
+// }
 
 var options = [
   {
@@ -49,12 +50,21 @@ var options = [
 command.exec(options, function () {
   logger.success(`Hello ${config.username} the motherfucker`)
 
-  identity.getToken((error, token) => {
-    if (error) {
-      logger.error(chalk.red.bold(error))
+  // identity.getToken((error, token) => {
+  //   if (error) {
+  //     logger.error(chalk.red.bold(error))
+  //     process.exit(1)
+  //   }
+
+  //   logger.success(`Token successfully acquired (user: ${config.username})`)
+  //   logger.success(`Token: ${token}`)
+
+  actions.importAction('io.ycs.import.tests', '/home/fgosselin/Documents/ActionA.action', function (err, response) {
+    if (err) {
+      logger.error(chalk.red.bold(err))
       process.exit(1)
     }
-    logger.success(`Token successfully acquired (user: ${config.username})`)
-    logger.success(`Token: ${token}`)
+
+    console.log('RESPONSE: ' + response)
   })
 })

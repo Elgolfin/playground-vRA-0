@@ -1,13 +1,45 @@
 import request from 'request'
 import config from './config'
 import chalk from 'chalk'
+import fs from 'fs'
 // import _ from 'lodash'
 
 module.exports = {
   getAll: getAll,
+  importAction: importAction,
   showConfig: function () {
     console.log(chalk.blue(config.username))
   }
+}
+
+function importAction (categoryName, actionPath, cb) {
+  var options = {
+    method: 'POST',
+    agent: config.agent,
+    url: `https://${config.hostname}/vco/api/actions/`,
+    headers: {
+      'cache-control': 'no-cache',
+      'authorization': 'Basic ' + new Buffer(config.username + ':' + config.password).toString('base64')
+    },
+    body: {},
+    qs: {categoryName: categoryName},
+    json: true,
+    formData: {file: fs.createReadStream(actionPath)}
+  }
+
+  request.post(options, function (error, response, body) {
+    if (error) {
+      cb(error)
+    }
+
+    console.log('BODY: ' + body.content[0])
+
+    if (response.statusCode === 200) {
+      cb(null, body.content[0])
+    } else {
+      cb(JSON.stringify(body))
+    }
+  })
 }
 
 function getAll (cb) {
@@ -24,7 +56,7 @@ function getAll (cb) {
     json: true
   }
 
-  request(options, function (error, response, body) {
+  request.get(options, function (error, response, body) {
     if (error) {
       cb(error)
     }
@@ -41,7 +73,7 @@ function getAll (cb) {
         // res.catalogResourceId = resource.catalogResource.id
         resources.push(res)
       }, this)
-      cb(null, JSON.stringify(resources, null, 2))
+      cb(null, body.content[0])
     } else {
       cb(JSON.stringify(body))
     }
